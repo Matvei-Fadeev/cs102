@@ -40,7 +40,7 @@ def gcd(a: int, b: int) -> int:
     pass
 
 
-def gcd_extended(a: int, b: int) -> (int, int, int):
+def gcd_extended(a: int, b: int) -> tp.Tuple[int, int, int]:
     if b == 0:
         return a, 1, 0
     else:
