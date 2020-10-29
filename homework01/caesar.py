@@ -1,3 +1,4 @@
+import string
 import typing as tp
 
 
@@ -15,7 +16,18 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     ''
     """
     ciphertext = ""
-    # PUT YOUR CODE HERE
+
+    lower_alphabet = string.ascii_lowercase
+    for symbol in plaintext:
+        new_symbol = symbol
+        if symbol.isalpha():
+            new_symbol = lower_alphabet[
+                (lower_alphabet.index(symbol.lower()) + shift) % len(lower_alphabet)
+            ]
+            if symbol.isupper():
+                new_symbol = new_symbol.upper()
+        ciphertext += new_symbol
+
     return ciphertext
 
 
@@ -33,7 +45,9 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     ''
     """
     plaintext = ""
-    # PUT YOUR CODE HERE
+
+    plaintext = encrypt_caesar(ciphertext, -shift)
+
     return plaintext
 
 
