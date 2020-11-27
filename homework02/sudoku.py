@@ -117,7 +117,7 @@ def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.Tuple[in
         for j in range(len(grid[i])):
             if grid[i][j] == g_empty_symbol:
                 return (i, j)
-    return None
+    pass
 
 def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.Set[str]:
     """Вернуть множество возможных значения для указанной позиции
@@ -136,10 +136,10 @@ def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -
     col = get_col(grid, pos)
     block = get_block(grid, pos)
 
-    result = []
+    result = ""
     for i in values:
         if i not in row and i not in col and i not in block:
-            result.append(i)
+            result += i
     return set(result)
 
 
@@ -197,7 +197,7 @@ def check_solution(solution: tp.List[tp.List[str]]) -> bool:
     return True
 
 
-def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
+def generate_sudoku(N: int) -> tp.Optional[tp.List[tp.List[str]]]:
     """Генерация судоку заполненного на N элементов
 
     >>> grid = generate_sudoku(40)
@@ -236,14 +236,12 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     # for value in range(min(n, values_count)):
     #     i, j = randint(0,8), randint(0,8)
     #     grid[i][j] = value
-
     solved_grid = solve(grid)
     for vacation in range(count_of_vacations):
         i, j = randint(0, 8), randint(0, 8)
         while solved_grid[i][j] == ".":
             i, j = randint(0, 8), randint(0, 8)
         solved_grid[i][j] = "."
-
     return solved_grid
 
 
