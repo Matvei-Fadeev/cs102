@@ -102,7 +102,7 @@ def get_block(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[s
     return result
 
 
-def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.Tuple[int, int]]:
+def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Tuple[int, int]:
     """Найти первую свободную позицию в пазле
 
     >>> find_empty_positions([['1', '2', '.'], ['4', '5', '6'], ['7', '8', '9']])
@@ -117,7 +117,7 @@ def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.Tuple[in
         for j in range(len(grid[i])):
             if grid[i][j] == g_empty_symbol:
                 return (i, j)
-    pass
+    return (-1, -1)
 
 
 def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.Set[str]:
@@ -144,7 +144,7 @@ def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -
     return set(result)
 
 
-def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
+def solve(grid: tp.List[tp.List[str]]) -> tp.List[tp.List[str]]:
     """ Решение пазла, заданного в grid """
     """ Как решать Судоку?
         1. Найти свободную позицию
@@ -158,17 +158,17 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
     [['5', '3', '4', '6', '7', '8', '9', '1', '2'], ['6', '7', '2', '1', '9', '5', '3', '4', '8'], ['1', '9', '8', '3', '4', '2', '5', '6', '7'], ['8', '5', '9', '7', '6', '1', '4', '2', '3'], ['4', '2', '6', '8', '5', '3', '7', '9', '1'], ['7', '1', '3', '9', '2', '4', '8', '5', '6'], ['9', '6', '1', '5', '3', '7', '2', '8', '4'], ['2', '8', '7', '4', '1', '9', '6', '3', '5'], ['3', '4', '5', '2', '8', '6', '1', '7', '9']]
     """
     empty_pos = find_empty_positions(grid)
-    if empty_pos == None:
+    if empty_pos == (-1, -1):
         return grid
 
     possible_values = find_possible_values(grid, empty_pos)
     for possible_value in possible_values:
         grid[empty_pos[0]][empty_pos[1]] = possible_value
         result_grid = solve(grid)
-        if result_grid:
+        if result_grid != [[""]]:
             return result_grid
     grid[empty_pos[0]][empty_pos[1]] = g_empty_symbol
-    return None
+    return [[""]]
 
 
 def check_solution(solution: tp.List[tp.List[str]]) -> bool:
@@ -180,12 +180,12 @@ def check_solution(solution: tp.List[tp.List[str]]) -> bool:
         return False
 
     for i in range(len(solution)):
-        row = set(get_row(solution, (i, None)))
+        row = set(get_row(solution, (i, 0)))
         if row != values:
             return False
 
     for i in range(len(solution)):
-        col = set(get_col(solution, (None, i)))
+        col = set(get_col(solution, (0, i)))
         if col != values:
             return False
 
