@@ -1,7 +1,12 @@
 import pathlib
 import typing as tp
+from random import randint
 
 T = tp.TypeVar("T")
+
+g_empty_symbol = "."
+g_block_width = 3
+g_values_count = 9
 
 
 def read_sudoku(path: tp.Union[str, pathlib.Path]) -> tp.List[tp.List[str]]:
@@ -42,7 +47,12 @@ def group(values: tp.List[T], n: int) -> tp.List[tp.List[T]]:
     >>> group([1,2,3,4,5,6,7,8,9], 3)
     [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     """
-    pass
+    result = []
+    for i in range(n):
+        left_index = int(i * (len(values) / n))
+        right_index = int(i * (len(values) / n) + n)
+        result.append(values[left_index:right_index])
+    return result
 
 
 def get_row(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
@@ -55,7 +65,7 @@ def get_row(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str
     >>> get_row([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (2, 0))
     ['.', '8', '9']
     """
-    pass
+    return grid[pos[0]]
 
 
 def get_col(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
@@ -68,7 +78,7 @@ def get_col(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str
     >>> get_col([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (0, 2))
     ['3', '6', '9']
     """
-    pass
+    return [grid[i][pos[1]] for i in range(len(grid))]
 
 
 def get_block(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
@@ -82,10 +92,17 @@ def get_block(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[s
     >>> get_block(grid, (8, 8))
     ['2', '8', '.', '.', '.', '5', '.', '7', '9']
     """
-    pass
+    width = g_block_width  # 3
+    start_i = pos[0] - pos[0] % width
+    start_j = pos[1] - pos[1] % width
+    result = []
+    for i in range(start_i, start_i + width):
+        for j in range(start_j, start_j + width):
+            result.append(grid[i][j])
+    return result
 
 
-def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.Tuple[int, int]]:
+def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Tuple[int, int]:
     """Найти первую свободную позицию в пазле
 
     >>> find_empty_positions([['1', '2', '.'], ['4', '5', '6'], ['7', '8', '9']])
@@ -95,7 +112,12 @@ def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.Tuple[in
     >>> find_empty_positions([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']])
     (2, 0)
     """
-    pass
+    row_len = len(grid)
+    for i in range(len(grid)):
+        for j in range(len(grid[i])):
+            if grid[i][j] == g_empty_symbol:
+                return (i, j)
+    return (-1, -1)
 
 
 def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.Set[str]:
@@ -109,10 +131,20 @@ def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -
     >>> values == {'2', '5', '9'}
     True
     """
-    pass
+    values = set("123456789")
+
+    row = get_row(grid, pos)
+    col = get_col(grid, pos)
+    block = get_block(grid, pos)
+
+    result = ""
+    for i in values:
+        if i not in row and i not in col and i not in block:
+            result += i
+    return set(result)
 
 
-def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
+def solve(grid: tp.List[tp.List[str]]) -> tp.List[tp.List[str]]:
     """ Решение пазла, заданного в grid """
     """ Как решать Судоку?
         1. Найти свободную позицию
@@ -125,13 +157,45 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
     >>> solve(grid)
     [['5', '3', '4', '6', '7', '8', '9', '1', '2'], ['6', '7', '2', '1', '9', '5', '3', '4', '8'], ['1', '9', '8', '3', '4', '2', '5', '6', '7'], ['8', '5', '9', '7', '6', '1', '4', '2', '3'], ['4', '2', '6', '8', '5', '3', '7', '9', '1'], ['7', '1', '3', '9', '2', '4', '8', '5', '6'], ['9', '6', '1', '5', '3', '7', '2', '8', '4'], ['2', '8', '7', '4', '1', '9', '6', '3', '5'], ['3', '4', '5', '2', '8', '6', '1', '7', '9']]
     """
-    pass
+    empty_pos = find_empty_positions(grid)
+    if empty_pos == (-1, -1):
+        return grid
+
+    possible_values = find_possible_values(grid, empty_pos)
+    for possible_value in possible_values:
+        grid[empty_pos[0]][empty_pos[1]] = possible_value
+        result_grid = solve(grid)
+        if result_grid != [[""]]:
+            return result_grid
+    grid[empty_pos[0]][empty_pos[1]] = g_empty_symbol
+    return [[""]]
 
 
 def check_solution(solution: tp.List[tp.List[str]]) -> bool:
     """ Если решение solution верно, то вернуть True, в противном случае False """
     # TODO: Add doctests with bad puzzles
-    pass
+    values = set("123456789")
+
+    if not solution:
+        return False
+
+    for i in range(len(solution)):
+        row = set(get_row(solution, (i, 0)))
+        if row != values:
+            return False
+
+    for i in range(len(solution)):
+        col = set(get_col(solution, (0, i)))
+        if col != values:
+            return False
+
+    for i in range(g_block_width):
+        for j in range(g_block_width):
+            block = set(get_block(solution, (i * g_block_width, j * g_block_width)))
+            if block != values:
+                return False
+
+    return True
 
 
 def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
@@ -156,7 +220,32 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     >>> check_solution(solution)
     True
     """
-    pass
+    """
+        Define default values
+    """
+    count_of_fields = g_values_count * g_values_count
+    values = set("123456789")
+    values_count = len(values)
+
+    n = min(N, count_of_fields)
+    count_of_vacations = count_of_fields - n
+
+    """
+        Generate more random grid
+    """
+    grid = [["." for i in range(g_values_count)] for j in range(g_values_count)]
+    # for value in range(min(n, values_count)):
+    #     i, j = randint(0,8), randint(0,8)
+    #     grid[i][j] = value
+
+    solved_grid = solve(grid)
+    for vacation in range(count_of_vacations):
+        i, j = randint(0, 8), randint(0, 8)
+        while solved_grid[i][j] == ".":
+            i, j = randint(0, 8), randint(0, 8)
+        solved_grid[i][j] = "."
+
+    return solved_grid
 
 
 if __name__ == "__main__":

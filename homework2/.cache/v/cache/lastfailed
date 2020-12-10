@@ -1,0 +1,11 @@
+{
+  "test_sudoku.py::SudokuTestCase::test_check_solution": true,
+  "test_sudoku.py::SudokuTestCase::test_find_empty_positions": true,
+  "test_sudoku.py::SudokuTestCase::test_find_possible_values": true,
+  "test_sudoku.py::SudokuTestCase::test_generate_sudoku": true,
+  "test_sudoku.py::SudokuTestCase::test_get_block": true,
+  "test_sudoku.py::SudokuTestCase::test_get_col": true,
+  "test_sudoku.py::SudokuTestCase::test_get_row": true,
+  "test_sudoku.py::SudokuTestCase::test_group": true,
+  "test_sudoku.py::SudokuTestCase::test_solve": true
+}
