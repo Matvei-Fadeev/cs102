@@ -1,7 +1,8 @@
 class Node:
-    def __init__(self, value = None, next = None):
+    def __init__(self, value=None, next=None):
         self.contained_object = value
         self.next = next
+
 
 class MyQueue:
     def __init__(self):
@@ -31,7 +32,6 @@ class MyQueue:
             queue.append(self.head.contained_object)
             self.head = self.head.next
         return queue
-
 
 
 #

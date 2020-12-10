@@ -1,5 +1,7 @@
 from queue import *
+
 from country import *
+
 
 def print_queue_list(queue_list, name=""):
     print("Print the %s queue" % (name))
@@ -7,12 +9,15 @@ def print_queue_list(queue_list, name=""):
         print(elem)
     print()
 
+
 def test_queue():
     numbers = MyQueue()
     numbers.add(5)
     numbers.add(3)
     numbers.add(6)
     numbers_list = numbers.get_list()
+    print_queue_list(numbers_list, "numbers")
+    numbers_list.clear()
     print_queue_list(numbers_list, "numbers")
 
     countries = MyQueue()
@@ -23,8 +28,8 @@ def test_queue():
     countries_list = countries.get_list()
     print_queue_list(countries_list, "countries")
 
+
 if "__main__" == __name__:
     test_queue()
-
 
     #
