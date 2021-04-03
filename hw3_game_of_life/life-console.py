@@ -52,6 +52,6 @@ if __name__ == "__main__":
     cols = int(args.cols)
     max_generations = int(args.max_generations)
 
-    game = GameOfLife((rows, cols), max_generations)
+    game = GameOfLife((rows, cols), max_generations=max_generations)
     console = Console(game)
     console.run()

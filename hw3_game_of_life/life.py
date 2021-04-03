@@ -1,5 +1,6 @@
 import pathlib
 import random
+import json
 
 from typing import List, Optional, Tuple
 
@@ -14,7 +15,7 @@ class GameOfLife:
         self,
         size: Tuple[int, int],
         randomize: bool = True,
-        max_generations: Optional[float] = float("inf"),
+        max_generations: float = float("inf"),
     ) -> None:
         # Размер клеточного поля
         self.rows, self.cols = size
@@ -81,7 +82,7 @@ class GameOfLife:
         """
         Не превысило ли текущее число поколений максимально допустимое.
         """
-        return self.generations >= self.max_generations
+        return self.generations >= self.max_generations 
 
     @property
     def is_changing(self) -> bool:
@@ -110,7 +111,7 @@ class GameOfLife:
 
         return game
 
-    def save(filename: pathlib.Path) -> None:
+    def save(self, filename: pathlib.Path) -> None:
         """
         Сохранить текущее состояние клеток в указанный файл.
         """

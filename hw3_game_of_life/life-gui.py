@@ -55,11 +55,11 @@ class GUI(UI):
         self.draw_lines()
         while is_running:
             for event in pygame.event.get():
-                if event.type == QUIT:
+                if event.type == pygame.QUIT:
                     is_running = False
-                if event.type == KEYDOWN and event.key == K_SPACE:
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     is_paused = not is_paused
-                if event.type == MOUSEBUTTONDOWN and is_paused:
+                if event.type == pygame.MOUSEBUTTONDOWN and is_paused:
                     x, y = pygame.mouse.get_pos()
                     row, col = y // self.cell_size, x // self.cell_size
                     self.life.curr_generation[row][col] = not self.life.curr_generation[row][col]
@@ -95,7 +95,7 @@ if __name__ == "__main__":
     cell_size = int(args.cell_size)
     max_generations = int(args.max_generations)
 
-    game = GameOfLife((int(width / cell_size), int(height / cell_size)), max_generations)
+    game = GameOfLife((int(width / cell_size), int(height / cell_size)), max_generations=max_generations)
     gui = GUI(game, cell_size)
 
     gui.run()
