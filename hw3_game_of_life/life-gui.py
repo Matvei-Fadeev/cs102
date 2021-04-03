@@ -95,9 +95,7 @@ if __name__ == "__main__":
     cell_size = int(args.cell_size)
     max_generations = int(args.max_generations)
 
-    game = GameOfLife(
-        (int(width / cell_size), int(height / cell_size)), max_generations=max_generations
-    )
+    game = GameOfLife((int(width / cell_size), int(height / cell_size)), max_generations=max_generations)
     gui = GUI(game, cell_size)
 
     gui.run()

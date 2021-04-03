@@ -98,7 +98,7 @@ class TestGameOfLife(unittest.TestCase):
         game = GameOfLife((self.rows, self.cols))
         game.curr_generation = self.grid
 
-        with open('steps.txt') as f:
+        with open('hw3_game_of_life/steps.txt') as f:
             steps = json.load(f)
 
         num_updates = 0
