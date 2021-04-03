@@ -10,12 +10,11 @@ Grid = List[Cells]
 
 
 class GameOfLife:
-    
     def __init__(
         self,
         size: Tuple[int, int],
-        randomize: bool=True,
-        max_generations: Optional[float]=float('inf')
+        randomize: bool = True,
+        max_generations: Optional[float] = float("inf"),
     ) -> None:
         # Размер клеточного поля
         self.rows, self.cols = size
@@ -28,13 +27,10 @@ class GameOfLife:
         # Текущее число поколений
         self.generations = 1
 
-    def create_grid(self, randomize: bool=False) -> Grid:
+    def create_grid(self, randomize: bool = False) -> Grid:
         grid = []
         if randomize:
-            grid = [
-                [random.randint(0, 1) for j in range(self.cols)]
-                for i in range(self.rows)
-            ]
+            grid = [[random.randint(0, 1) for j in range(self.cols)] for i in range(self.rows)]
         else:
             grid = [[0] * self.cols for i in range(self.rows)]
         return grid
@@ -95,7 +91,7 @@ class GameOfLife:
         return self.curr_generation != self.prev_generation
 
     @staticmethod
-    def from_file(filename: pathlib.Path) -> 'GameOfLife':
+    def from_file(filename: pathlib.Path) -> "GameOfLife":
         """
         Прочитать состояние клеток из указанного файла.
         """
@@ -103,13 +99,14 @@ class GameOfLife:
             data = json.load(file)
 
         game = GameOfLife(
-            size=(data['rows'], data['cols']),
+            size=(data["rows"], data["cols"]),
             randomize=False,
-            max_generations=data['max_generations'])
+            max_generations=data["max_generations"],
+        )
 
-        game.prev_generation = data['prev_generation']
-        game.curr_generation = data['curr_generation']
-        game.generations = data['generations']
+        game.prev_generation = data["prev_generation"]
+        game.curr_generation = data["curr_generation"]
+        game.generations = data["generations"]
 
         return game
 
@@ -118,13 +115,13 @@ class GameOfLife:
         Сохранить текущее состояние клеток в указанный файл.
         """
         data = {
-            'rows': self.rows,
-            'cols': self.cols,
-            'prev_generation': self.prev_generation,
-            'curr_generation': self.curr_generation,
-            'max_generations': self.max_generations,
-            'generations': self.generations
+            "rows": self.rows,
+            "cols": self.cols,
+            "prev_generation": self.prev_generation,
+            "curr_generation": self.curr_generation,
+            "max_generations": self.max_generations,
+            "generations": self.generations,
         }
 
-        with open(filename, 'w') as file:
+        with open(filename, "w") as file:
             json.dump(data, file)
