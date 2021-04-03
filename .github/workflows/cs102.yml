@@ -13,13 +13,11 @@ jobs:
         python-version: '3.8.6'
     - name: Install dependencies
       run: |
+        sudo apt-get update
+        sudo apt-get dist-upgrade
+        sudo apt-get install libsdl1.2debian:i386
         python -m pip install --upgrade pip
         pip install black mypy pylint pygame
-        sudo apt-get update
-
-        sudo apt-get dist-upgrade
-
-        sudo apt-get install libsdl1.2debian:i386
     - name: Run black
       run: |
         black -l 100 --check --diff --color --exclude "test*" ${{ github.head_ref }}
